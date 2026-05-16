@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "C Judge: 브라우저로 열기",
+      "type": "shell",
+      "command": "cmd",
+      "args": ["/c", "start", "", "index.html"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false
+      }
+    }
+  ]
+}

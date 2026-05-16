@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-focus">본문으로 건너뛰기</a>
+
+    <header class="topnav" id="topnav">
+      <div class="topnav-inner">
+        <a class="topnav-brand" href="#home">
+          <span class="topnav-mark">C</span>
+          <span class="topnav-name">C Studio</span>
+          <span class="topnav-tag">Beta</span>
+        </a>
+        <nav class="topnav-menu" aria-label="주요 메뉴">
+          <a href="#home" class="topnav-link">홈</a>
+          <a href="#all-problems" class="topnav-link">문제</a>
+          <a href="#today-challenge" class="topnav-link">오늘의 도전</a>
+          <a href="#streak-section" class="topnav-link">학습 기록</a>
+          <a href="#features-title" class="topnav-link">기능</a>
+        </nav>
+        <div class="topnav-actions">
+          <button type="button" class="topnav-icon" id="btn-pomodoro" title="뽀모도로 타이머">⏱</button>
+          <button type="button" class="topnav-icon" id="btn-random" title="랜덤 문제">🎲</button>
+          <button type="button" class="topnav-cta" id="btn-topnav-start">시작하기</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="app">
+      <aside class="sidebar" aria-label="사이드 메뉴">
+        <a id="brand-link" class="brand brand-link" href="#home" title="메인으로">
+          <span class="brand-mark" aria-hidden="true">C</span>
+          <div class="brand-text">
+            <strong>C Studio</strong>
+            <span>문제 · 에디터 · 기록</span>
+          </div>
+        </a>
+
+        <nav class="sidebar-nav" aria-label="바로가기">
+          <a class="nav-pill" href="#home" data-nav="home">메인</a>
+          <a class="nav-pill" href="#1000" data-nav="first">첫 문제</a>
+          <button type="button" class="nav-pill nav-pill-btn" id="btn-random-sidebar" title="랜덤 문제">🎲 랜덤</button>
+        </nav>
+
+        <div class="achievement-bar">
+          <div class="achievement-icon">⭐</div>
+          <div class="achievement-info">
+            <div class="achievement-label">학습 진행</div>
+            <div class="achievement-value" id="achievement-text">LV.1 초보 개발자</div>
+            <div class="achievement-progress">
+              <div class="achievement-progress-fill" id="achievement-fill" style="width: 15%"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="concept-tree-btn" id="btn-concept-tree">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          컨셉 트리맵
+        </button>
+
+        <div class="sidebar-tools">
+          <label class="sr-only" for="sidebar-search">문제 검색</label>
+          <input
+            id="sidebar-search"
+            class="sidebar-search"
+            type="search"
+            placeholder="번호 · 제목 · 태그 검색…"
+            autocomplete="off"
+          />
+          <div class="filter-row" role="group" aria-label="난이도 필터">
+            <button type="button" class="chip chip-filter is-on" data-tier="all">전체</button>
+            <button type="button" class="chip chip-filter" data-tier="bronze">브론즈</button>
+            <button type="button" class="chip chip-filter" data-tier="silver">실버</button>
+            <button type="button" class="chip chip-filter" data-tier="gold">골드</button>
+          </div>
+        </div>
+
+        <nav class="lesson-nav" aria-label="문제 목록">
+          <p class="nav-label">문제 <span id="problem-count-label" class="nav-count"></span></p>
+          <ul id="problem-list" class="lesson-list"></ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="tool-grid">
+            <button type="button" class="tool-btn" id="btn-theme" title="테마 전환">다크 모드</button>
+            <button type="button" class="tool-btn" id="btn-shortcuts" title="단축키 (? )">단축키</button>
+            <div class="font-tools">
+              <span class="tool-label">글꼴</span>
+              <button type="button" class="tool-btn sm" id="btn-font-down" aria-label="코드 글자 작게">A−</button>
+              <button type="button" class="tool-btn sm" id="btn-font-up" aria-label="코드 글자 크게">A+</button>
+            </div>
+          </div>
+          <div class="entry-box">
+            <p class="entry-title">이 페이지 주소</p>
+            <a id="site-entry-link" class="entry-url" href="index.html">로딩 중…</a>
+          </div>
+          <p class="hint-text">코드는 브라우저에 임시 저장됩니다. 백엔드 연결 시 실제 채점!</p>
+        </div>
+      </aside>
+
+      <div class="main-column" id="main-focus" tabindex="-1">
+        <section id="view-home" class="view view-home" aria-label="메인 화면">
+          <header class="home-hero hero-grand">
+            <div class="hero-mesh" aria-hidden="true"></div>
+            <div class="hero-grid" aria-hidden="true"></div>
+            <div class="hero-floats" aria-hidden="true">
+              <span class="float-chip float-chip-1">printf("Hello");</span>
+              <span class="float-chip float-chip-2">int *p = &amp;a;</span>
+              <span class="float-chip float-chip-3">for (i=0; i&lt;n; i++)</span>
+              <span class="float-chip float-chip-4">struct Node { ... }</span>
+              <span class="float-chip float-chip-5">malloc(sizeof(int))</span>
+            </div>
+            <div class="home-hero-inner hero-grand-inner">
+              <div class="home-badge hero-badge-grand">
+                <span class="badge-dot"></span>
+                C언어 학습 플랫폼 · 2026 신규 개편
+              </div>
+              <h1 class="home-title hero-grand-title">
+                <span class="title-line-1">코드로 배우는</span>
+                <span class="title-line-2">C 언어의 모든 것</span>
+              </h1>
+              <p class="home-subtitle hero-grand-subtitle">
+                백준 스타일 문제, 메모리 시각화, 인터랙티브 디버거.<br/>
+                브라우저 하나로 강의실 수준의 학습 환경을 구축했습니다.
+              </p>
+              <div class="home-cta-block hero-cta-grand">
+                <button type="button" class="btn-cta-primary btn-cta-grand" id="btn-start">
+                  지금 시작하기
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </button>
+                <div class="home-cta-sub">
+                  <a class="home-link-btn" id="btn-continue" href="#1000">이어서 풀기</a>
+                  <span class="home-cta-dot" aria-hidden="true">·</span>
+                  <a class="home-link-btn" href="#all-problems">문제 목록 보기</a>
+                </div>
+              </div>
+              <div class="hero-trust">
+                <div class="trust-item">
+                  <strong>60+</strong>
+                  <span>엄선된 문제</span>
+                </div>
+                <span class="trust-divider" aria-hidden="true"></span>
+                <div class="trust-item">
+                  <strong>16</strong>
+                  <span>업적 시스템</span>
+                </div>
+                <span class="trust-divider" aria-hidden="true"></span>
+                <div class="trust-item">
+                  <strong>10</strong>
+                  <span>핵심 개념</span>
+                </div>
+                <span class="trust-divider" aria-hidden="true"></span>
+                <div class="trust-item">
+                  <strong>∞</strong>
+                  <span>로컬 저장</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div class="home-shell">
+            <section class="today-challenge reveal" id="today-challenge" aria-labelledby="today-title">
+              <div class="today-head">
+                <span class="today-eyebrow">
+                  <span class="today-pulse"></span>
+                  오늘의 도전
+                </span>
+                <h2 id="today-title" class="today-title">매일 1문제, 7일이면 습관이 됩니다</h2>
+                <p class="today-sub">오늘 추천 문제는 시스템이 자동으로 선정합니다. 매일 자정에 갱신.</p>
+              </div>
+              <a class="today-card" id="today-card" href="#1000">
+                <div class="today-card-left">
+                  <span class="today-card-no" id="today-card-no">#1000</span>
+                  <h3 class="today-card-title" id="today-card-title">Hello World</h3>
+                  <p class="today-card-meta">
+                    <span class="today-card-tier" id="today-card-tier">브론즈</span>
+                    <span id="today-card-tags">출력</span>
+                  </p>
+                </div>
+                <div class="today-card-right">
+                  <div class="today-card-action">
+                    풀러 가기
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                  </div>
+                </div>
+              </a>
+            </section>
+
+            <div class="home-stats reveal" id="home-stats">
+              <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <span class="stat-value" id="stat-solved">0</span>
+                <span class="stat-label">푼 문제</span>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <span class="stat-value" id="stat-xp">0</span>
+                <span class="stat-label">XP 획득</span>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <span class="stat-value" id="stat-streak">0</span>
+                <span class="stat-label">연속 학습</span>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <span class="stat-value" id="stat-achievements">0</span>
+                <span class="stat-label">업적</span>
+              </div>
+            </div>
+
+            <section class="streak-section reveal" id="streak-section" aria-labelledby="streak-title">
+              <div class="section-numhead">
+                <span class="section-num">01</span>
+                <div>
+                  <h2 id="streak-title" class="section-bigtitle">학습 기록</h2>
+                  <p class="section-sub">매일 코드를 작성한 순간이 그래프로 남습니다.</p>
+                </div>
+              </div>
+              <div class="streak-card">
+                <div class="streak-summary">
+                  <div class="streak-stat">
+                    <span class="streak-stat-label">현재 연속</span>
+                    <span class="streak-stat-value"><span id="streak-current">0</span>일</span>
+                  </div>
+                  <div class="streak-stat">
+                    <span class="streak-stat-label">최장 기록</span>
+                    <span class="streak-stat-value"><span id="streak-longest">0</span>일</span>
+                  </div>
+                  <div class="streak-stat">
+                    <span class="streak-stat-label">활동 일수</span>
+                    <span class="streak-stat-value"><span id="streak-active">0</span>일</span>
+                  </div>
+                </div>
+                <div class="streak-heatmap-wrap">
+                  <div class="streak-heatmap" id="streak-heatmap" aria-label="활동 히트맵"></div>
+                  <div class="streak-legend">
+                    <span>적음</span>
+                    <span class="legend-cell legend-l0"></span>
+                    <span class="legend-cell legend-l1"></span>
+                    <span class="legend-cell legend-l2"></span>
+                    <span class="legend-cell legend-l3"></span>
+                    <span class="legend-cell legend-l4"></span>
+                    <span>많음</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="home-pitch reveal" aria-labelledby="pitch-title">
+              <h2 id="pitch-title" class="home-pitch-title">이런 점이 편해요</h2>
+              <ul class="home-pitch-list">
+                <li><strong>시각적 학습</strong> — 메모리 블록 애니메이션으로 변수의 할당을 시각화.</li>
+                <li><strong>개념적 이해</strong> — 컨셉 트리맵으로 C언어의 개념을 맵으로 연결해서 학습.</li>
+                <li><strong>게이미피케이션</strong> — Achievement로 동기부여 유지, 퀴즈로 출력 예측 도전.</li>
+                <li><strong>개인 노트</strong> — 문제마다 마크다운 메모로 복습 가능.</li>
+              </ul>
+            </section>
+
+            <section class="home-features-wrap reveal" aria-labelledby="features-title">
+              <div class="section-numhead">
+                <span class="section-num">02</span>
+                <div>
+                  <h2 id="features-title" class="section-bigtitle">주요 기능</h2>
+                  <p class="section-sub">자주 쓰는 흐름을 빠르게 쓸 수 있게 모았습니다.</p>
+                </div>
+              </div>
+              <div class="home-features" id="home-features">
+                <div class="feature-card">
+                  <span class="feature-card-index">01</span>
+                  <h3 class="feature-card-title">메모리 시각화</h3>
+                  <p class="feature-card-desc">변수의 메모리 할당을 블록 단위로 애니메이션 표시. 포인터와 배열의 관계를 시각적으로 이해.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="feature-card-index">02</span>
+                  <h3 class="feature-card-title">스텝 디버거</h3>
+                  <p class="feature-card-desc">한 줄씩 코드를 실행하면서 변수 상태의 변화를 확인. 콜 스택과 출력을 동시에 표시.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="feature-card-index">03</span>
+                  <h3 class="feature-card-title">Achievement 시스템</h3>
+                  <p class="feature-card-desc">문제를 풀면 XP를 획득. 레벨업으로 새로운 문제 잠금 해제. 컬렉션 욕구를 자극.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="feature-card-index">04</span>
+                  <h3 class="feature-card-title">출력 예측 퀴즈</h3>
+                  <p class="feature-card-desc">코드를 보고 출력을 예측하는 빠른 퀴즈. 지식의 정착에 효과적.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="feature-card-index">05</span>
+                  <h3 class="feature-card-title">컨셉 트리맵</h3>
+                  <p class="feature-card-desc">C언어의 개념을 체계적으로 정리. 기초부터 응용까지 단계적으로 학습.</p>
+                </div>
+                <div class="feature-card">
+                  <span class="feature-card-index">06</span>
+                  <h3 class="feature-card-title">개인 노트</h3>
+                  <p class="feature-card-desc">문제마다 개인 메모 첨부. 복습과 회고에 활용.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="home-section reveal" id="all-problems">
+              <div class="section-numhead">
+                <span class="section-num">03</span>
+                <div>
+                  <h2 class="section-bigtitle">전체 문제</h2>
+                  <p class="section-sub">난이도·태그·번호로 사이드바에서도 찾을 수 있어요.</p>
+                </div>
+              </div>
+              <div class="home-grid" id="home-all-problems"></div>
+            </section>
+
+            <section class="cta-banner reveal" aria-labelledby="cta-banner-title">
+              <div class="cta-banner-bg" aria-hidden="true"></div>
+              <div class="cta-banner-inner">
+                <h2 id="cta-banner-title" class="cta-banner-title">코드는 머리로 외우는 게 아닙니다.</h2>
+                <p class="cta-banner-sub">손가락으로 부딪히며 익혀야 합니다. 첫 문제부터 함께 시작해요.</p>
+                <button type="button" class="btn-cta-primary btn-cta-grand" id="btn-cta-banner-start">
+                  첫 문제 풀어보기
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <footer class="home-foot site-footer">
+            <div class="footer-grid">
+              <div class="footer-col footer-brand-col">
+                <div class="footer-brand">
+                  <span class="footer-mark">C</span>
+                  <strong>C Studio</strong>
+                </div>
+                <p class="footer-tag">브라우저에서 배우는 C언어, 처음부터 알고리즘까지.</p>
+              </div>
+              <div class="footer-col">
+                <h4 class="footer-head">학습</h4>
+                <a href="#all-problems">전체 문제</a>
+                <a href="#today-challenge">오늘의 도전</a>
+                <a href="#streak-section">학습 기록</a>
+              </div>
+              <div class="footer-col">
+                <h4 class="footer-head">기능</h4>
+                <a href="#features-title">주요 기능</a>
+                <a href="#home">메모리 시각화</a>
+                <a href="#home">컨셉 트리맵</a>
+              </div>
+              <div class="footer-col">
+                <h4 class="footer-head">단축키</h4>
+                <p><kbd>Ctrl</kbd>+<kbd>Enter</kbd> 실행</p>
+                <p><kbd>Ctrl</kbd>+<kbd>S</kbd> 저장</p>
+                <p><kbd>?</kbd> 도움말</p>
+              </div>
+            </div>
+            <div class="footer-bottom">
+              <span>© 2026 C Studio. Built with love for C learners.</span>
+              <span class="footer-version">v2.0 · Grand Edition</span>
+            </div>
+          </footer>
+        </section>
+
+        <section id="view-problem" class="view view-problem is-hidden" aria-label="문제 풀이" hidden>
+          <header class="topbar">
+            <div class="breadcrumb">
+              <a class="crumb-link" href="#home">메인</a>
+              <span class="sep" aria-hidden="true">/</span>
+              <span id="problem-meta" class="problem-meta">1000번</span>
+              <span class="sep" aria-hidden="true">|</span>
+              <h1 id="problem-title" class="lesson-title">Hello, World!</h1>
+            </div>
+            <div class="topbar-actions">
+              <button type="button" class="btn btn-icon" id="btn-bookmark" title="북마크">☆</button>
+              <button type="button" class="btn btn-ghost" id="btn-notes" title="개인 메모">📝</button>
+              <button type="button" class="btn btn-ghost" id="btn-copy-code" title="코드 복사">복사</button>
+              <button type="button" class="btn btn-ghost" id="btn-mark-solved" title="완료 체크">완료</button>
+              <button type="button" class="btn btn-ghost" id="btn-reset" title="초기화">초기화</button>
+              <button type="button" class="btn-hint" id="btn-hint" title="힌트 보기">💡힌트</button>
+              <button type="button" class="btn-quiz" id="btn-quiz" title="출력 예측 퀴즈">🎯퀴즈</button>
+              <button type="button" class="btn btn-achievement" id="btn-achievement" title="업적 확인">🏆</button>
+              <button type="button" class="btn btn-primary" id="btn-run">실행</button>
+              <button type="button" class="btn btn-secondary" id="btn-submit">제출</button>
+            </div>
+          </header>
+
+          <div class="content">
+            <section class="panel panel-readme" aria-labelledby="readme-heading">
+              <div class="panel-readme-head">
+                <h2 id="readme-heading" class="panel-title">문제</h2>
+                <div class="readme-actions">
+                  <button type="button" class="btn-text" id="btn-collapse-all">예제 접기</button>
+                </div>
+              </div>
+              <div id="readme-body" class="readme-body prose"></div>
+              <div class="tags" id="problem-tags"></div>
+              <div class="share-row problem-share">
+                <span class="share-label">이 문제 링크</span>
+                <a id="lesson-share-link" class="share-link" href="#1000">#1000</a>
+                <button type="button" class="btn-text share-copy" id="btn-copy-link">복사</button>
+              </div>
+            </section>
+
+            <section class="editor-stack" aria-label="코드">
+              <div class="panel panel-editor">
+                <div class="panel-head">
+                  <div class="panel-head-left">
+                    <span class="panel-title">main.c</span>
+                    <div class="snippet-dropdown">
+                      <button type="button" class="btn-text snippet-toggle" id="btn-snippets">+ 코드 조각</button>
+                      <div class="snippet-menu" id="snippet-menu" hidden>
+                        <div class="snippet-list" id="snippet-list"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel-head-right">
+                    <span class="save-indicator" id="save-indicator" aria-live="polite"></span>
+                    <span class="panel-meta" id="line-col">줄 1, 열 1</span>
+                  </div>
+                </div>
+                <div class="editor-wrap">
+                  <div class="line-gutter" id="line-gutter" aria-hidden="true"></div>
+                  <textarea
+                    id="code-input"
+                    class="code-input"
+                    spellcheck="false"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    rows="18"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="viz-column">
+                <div class="panel panel-output">
+                  <div class="panel-head">
+                    <span class="panel-title">채점 / 출력</span>
+                    <div class="output-controls">
+                      <button type="button" class="btn-text" id="btn-viz-toggle" title="시각화">시각화</button>
+                      <button type="button" class="btn-text" id="btn-clear-output">비우기</button>
+                    </div>
+                  </div>
+                  <pre id="output" class="output" role="status">백엔드 연결 후 여기에 결과가 나옵니다.</pre>
+                </div>
+
+                <div id="viz-panel" class="viz-panel is-hidden" hidden>
+                  <div class="viz-toolbar">
+                    <button type="button" class="viz-btn" id="btn-viz-play" title="자동 실행">
+                      <span class="viz-icon">▶</span>
+                    </button>
+                    <button type="button" class="viz-btn" id="btn-viz-step" title="다음 줄">
+                      <span class="viz-icon">⏭</span>
+                    </button>
+                    <button type="button" class="viz-btn" id="btn-viz-reset" title="처음으로">
+                      <span class="viz-icon">⟲</span>
+                    </button>
+                    <div class="viz-speed">
+                      <label for="viz-speed-slider">속도</label>
+                      <input type="range" id="viz-speed-slider" min="100" max="2000" value="800" />
+                    </div>
+                    <div class="viz-step-info">
+                      <span id="viz-step-count">줄 0/0</span>
+                    </div>
+                  </div>
+
+                  <div class="viz-content">
+                    <div class="viz-watches">
+                      <h4 class="viz-section-title">변수</h4>
+                      <div id="viz-watches-list" class="viz-watches-list"></div>
+                    </div>
+
+                    <div class="viz-memory">
+                      <h4 class="viz-section-title">메모리</h4>
+                      <div id="viz-memory-view" class="viz-memory-view"></div>
+                    </div>
+
+                    <div class="viz-callstack">
+                      <h4 class="viz-section-title">콜 스택</h4>
+                      <div id="viz-callstack" class="viz-callstack-list"></div>
+                    </div>
+
+                    <div class="viz-output">
+                      <h4 class="viz-section-title">출력</h4>
+                      <pre id="viz-output" class="viz-output-pre"></pre>
+                    </div>
+                  </div>
+
+                  <div class="viz-code-highlight">
+                    <pre id="viz-code-view" class="viz-code-view"></pre>
+                  </div>
+
+                  <div id="viz-comparison" class="viz-comparison" style="display:none;"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <div id="pomodoro-panel" class="pomodoro-panel" hidden>
+      <div class="pomodoro-head">
+        <h3 class="pomodoro-title">⏱ 뽀모도로 타이머</h3>
+        <button type="button" class="btn-text" id="pomodoro-close">✕</button>
+      </div>
+      <div class="pomodoro-body">
+        <div class="pomodoro-display" id="pomodoro-display">25:00</div>
+        <div class="pomodoro-mode" id="pomodoro-mode">집중 시간</div>
+        <div class="pomodoro-ring">
+          <svg viewBox="0 0 100 100" class="pomodoro-svg">
+            <circle cx="50" cy="50" r="45" class="pomodoro-track"/>
+            <circle cx="50" cy="50" r="45" class="pomodoro-progress" id="pomodoro-progress"/>
+          </svg>
+        </div>
+        <div class="pomodoro-actions">
+          <button type="button" class="pomodoro-btn pomodoro-btn-primary" id="pomodoro-toggle">시작</button>
+          <button type="button" class="pomodoro-btn" id="pomodoro-reset">초기화</button>
+        </div>
+        <div class="pomodoro-presets">
+          <button type="button" class="pomodoro-preset is-active" data-min="25">25분 집중</button>
+          <button type="button" class="pomodoro-preset" data-min="5">5분 휴식</button>
+          <button type="button" class="pomodoro-preset" data-min="50">50분 집중</button>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" id="scroll-top" class="scroll-top" aria-label="맨 위로" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+
+    <div id="hint-panel" class="hint-panel is-hidden" hidden>
+      <div class="hint-header">
+        <h3 class="hint-title">💡 힌트</h3>
+        <button type="button" class="btn-text hint-close" id="hint-close">✕</button>
+      </div>
+      <div class="hint-content">
+        <div class="hint-step" id="hint-step-1">
+          <span class="hint-badge" id="hint-level-badge">1단계</span>
+          <p class="hint-text" id="hint-text-display">힌트가 여기에 표시됩니다</p>
+          <button type="button" class="btn btn-next-hint" id="btn-next-hint">다음 힌트 →</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-panel" class="quiz-panel" hidden>
+      <div class="quiz-header">
+        <h3 class="quiz-title">🎯 출력 예측 퀴즈</h3>
+        <p class="quiz-subtitle">코드의 출력 결과를 예측하세요</p>
+      </div>
+      <div class="quiz-body">
+        <pre class="quiz-code" id="quiz-code"></pre>
+        <p class="quiz-question" id="quiz-question">이 코드의 출력은?</p>
+        <div class="quiz-options" id="quiz-options"></div>
+      </div>
+      <div class="quiz-footer">
+        <span class="quiz-result" id="quiz-result"></span>
+        <button type="button" class="btn btn-primary" id="quiz-next">다음 문제 →</button>
+      </div>
+    </div>
+
+    <div id="achievement-popup" class="achievement-popup" hidden>
+      <div class="achievement-popup-header">
+        <div class="achievement-popup-icon" id="achievement-popup-icon">🏆</div>
+        <h3 class="achievement-popup-title" id="achievement-popup-title">업적 달성!</h3>
+        <p class="achievement-popup-desc" id="achievement-popup-desc">축하합니다!</p>
+      </div>
+      <div class="achievement-popup-body">
+        <div class="achievement-popup-xp" id="achievement-popup-xp">+50 XP</div>
+        <button type="button" class="achievement-popup-btn" id="achievement-popup-close">확인</button>
+      </div>
+    </div>
+
+    <div id="concept-modal" class="concept-modal" hidden>
+      <div class="concept-modal-content">
+        <div class="concept-modal-header">
+          <h3 class="concept-modal-title">🗺️ 컨셉 트리맵</h3>
+          <button type="button" class="btn-text" id="concept-modal-close">✕</button>
+        </div>
+        <div class="concept-modal-body">
+          <div class="concept-tree" id="concept-tree"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="notes-panel" class="notes-panel" hidden>
+      <div class="notes-header">
+        <h3 class="notes-title">📝 개인 메모</h3>
+        <button type="button" class="btn-text" id="notes-close">✕</button>
+      </div>
+      <div class="notes-body">
+        <textarea class="notes-textarea" id="notes-textarea" placeholder="문제에 대한 메모를 작성하세요..."></textarea>
+        <button type="button" class="notes-save-btn" id="notes-save">저장</button>
+      </div>
+    </div>
+
+    <div id="modal-backdrop" class="modal-backdrop is-hidden" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-head">
+          <h2 id="modal-title" class="modal-title">단축키</h2>
+          <button type="button" class="btn-text modal-close" id="modal-close" aria-label="닫기">✕</button>
+        </div>
+        <ul class="shortcut-list">
+          <li><kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span>실행 (데모)</span></li>
+          <li><kbd>Ctrl</kbd> + <kbd>S</kbd> <span>임시 저장</span></li>
+          <li><kbd>?</kbd> <span>이 창 열기 / 닫기</span></li>
+          <li><kbd>Esc</kbd> <span>창 닫기</span></li>
+        </ul>
+        <p class="modal-note">백엔드 연결 시 실행·제출이 실제 동작으로 바뀝니다.</p>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
