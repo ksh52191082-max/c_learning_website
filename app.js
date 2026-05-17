@@ -1,3 +1,4 @@
+const API_BASE_URL = 'https://coding-edu-backend-production.up.railway.app/api/v1';
 const C_KEYWORDS = {
   printf: { desc: "문자열이나 변수를 출력하는 함수", syntax: 'printf("형식 문자열", 변수);', example: 'printf("Hello!\\n");' },
   scanf: { desc: "키보드에서 값을 입력받는 함수", syntax: 'scanf("형식", &변수);', example: 'scanf("%d", &num);' },
