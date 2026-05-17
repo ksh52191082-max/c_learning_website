@@ -1,2 +1,2 @@
 /*    /index.html   200
-/api/*  https://coding-edu-backend-production.up.railway.app/api/*  200
+/api/*  https://coding-edu-backend-production.up.railway.app/api/:splat  200
